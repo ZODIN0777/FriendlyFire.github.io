@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<CONTACT US AT INSTA @FriendlyFireOfficial>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
