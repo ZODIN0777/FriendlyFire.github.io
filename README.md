@@ -1,50 +1,151 @@
-# Friendly Fire
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRIENDLY FIRE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .review-form, .review-list, .chat-section, .ads {
+            background: #fff;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .review-form h2, .review-list h2, .chat-section h2, .ads h2 {
+            margin-top: 0;
+        }
+        .review-form input, .review-form textarea, .chat-section input, .chat-section textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .review-form button, .chat-section button {
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .review-item, .chat-message {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>FRIENDLY FIRE</h1>
+        <p>A place for gamers to share and connect</p>
+    </header>
 
-Welcome to Friendly Fire, a place for gamers to share their gaming experiences, connect with other players, and chat with fellow gamers.
+    <div class="container">
+        <div class="review-form">
+            <h2>Share Your Gaming Experience</h2>
+            <form id="reviewForm">
+                <input type="text" id="username" placeholder="Your Name" required>
+                <input type="text" id="game" placeholder="Game Title" required>
+                <input type="text" id="inGameID" placeholder="In-Game ID/UID">
+                <textarea id="review" placeholder="Your Review" rows="5" required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
 
-## Deployment
+        <div class="review-list">
+            <h2>Community Reviews</h2>
+            <div id="reviews"></div>
+        </div>
 
-You can deploy this website for free using either GitHub Pages or Netlify.
+        <div class="chat-section">
+            <h2>Chat with Other Gamers</h2>
+            <div id="chatMessages"></div>
+            <form id="chatForm">
+                <input type="text" id="chatUsername" placeholder="Your Name" required>
+                <textarea id="chatMessage" placeholder="Your Message" rows="3" required></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </div>
 
-### Deploying with GitHub Pages
+        <div class="ads">
+            <h2>Advertisements</h2>
+            <p>Ad space available. Contact us for more information.</p>
+        </div>
+    </div>
 
-1. **GitHub Repository**:
-   - Create a GitHub account if you don't already have one.
-   - Create a new public repository on GitHub.
+    <footer>
+        <p>Website created by Zodin</p>
+    </footer>
 
-2. **Upload Your Files**:
-   - Upload your website files (e.g., index.html, styles.css, script.js) to the repository.
+    <script>
+        document.getElementById('reviewForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-3. **Enable GitHub Pages**:
-   - Go to the "Settings" of your repository.
-   - Scroll down to the "Pages" section.
-   - Select the main branch as the source and save.
+            const username = document.getElementById('username').value;
+            const game = document.getElementById('game').value;
+            const inGameID = document.getElementById('inGameID').value;
+            const review = document.getElementById('review').value;
 
-4. **Access Your Website**:
-   - GitHub will provide a URL like https://yourusername.github.io/repository-name.
+            const reviewItem = document.createElement('div');
+            reviewItem.classList.add('review-item');
+            reviewItem.innerHTML = `
+                <h3>${game} - Reviewed by ${username}</h3>
+                <p>${review}</p>
+                ${inGameID ? `<p><strong>In-Game ID:</strong> ${inGameID}</p>` : ''}
+            `;
 
-### Deploying with Netlify
+            document.getElementById('reviews').appendChild(reviewItem);
 
-1. **Sign Up for Netlify**:
-   - Go to [Netlify](https://www.netlify.com) and sign up for a free account.
+            document.getElementById('reviewForm').reset();
+        });
 
-2. **Connect Your GitHub Repository**:
-   - After signing in, click on "New site from Git".
-   - Connect your GitHub account and select your repository.
+        document.getElementById('chatForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-3. **Deploy Your Site**:
-   - Follow the prompts to deploy your site.
-   - Netlify will build and deploy your site automatically.
-   - You will get a URL like https://your-site-name.netlify.app.
+            const chatUsername = document.getElementById('chatUsername').value;
+            const chatMessage = document.getElementById('chatMessage').value;
 
-## Usage
+            const chatMessageItem = document.createElement('div');
+            chatMessageItem.classList.add('chat-message');
+            chatMessageItem.innerHTML = `
+                <p><strong>${chatUsername}:</strong> ${chatMessage}</p>
+            `;
 
-Feel free to use this template for your own gaming community website. Modify the content and styling to fit your needs. The website includes features such as sharing gaming experiences, connecting with other players, and chatting with fellow gamers.
+            document.getElementById('chatMessages').appendChild(chatMessageItem);
 
-## Contributing
+            document.getElementById('chatForm').reset();
+        });
+    </script>
+</body>
+</html>
 
-Contributions are welcome! If you find any bugs or have suggestions for improvement, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
