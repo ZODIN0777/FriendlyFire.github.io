@@ -5,7 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FRIENDLY FIRE - Official Website</title>
     <style>
-        /* Your CSS styles here */
+        /* General Styles */
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header, footer {
+            background-color: #333;
+            padding: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #444;
+            text-align: center;
+            border-bottom: 2px solid #666;
+        }
+        nav ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        nav ul li a:hover {
+            background-color: #666;
+        }
+        section {
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="datetime-local"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            background-color: #555;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #666;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #888;
+        }
+        /* Live Chat Styles */
+        #chatMessages {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #333;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #chatMessages p {
+            margin: 5px 0;
+        }
+        /* Profile Styles */
+        #profileForm {
+            display: none;
+        }
+        /* Game Sessions Styles */
+        #sessionList {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #333;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #sessionList p {
+            margin: 5px 0;
+        }
+        /* Reviews Styles */
+        #reviewList {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #333;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #reviewList p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -92,6 +190,7 @@
     </script>
 </body>
 </html>
+
 
 
 
