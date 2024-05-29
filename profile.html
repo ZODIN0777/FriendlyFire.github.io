@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - FRIENDLY FIRE</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header, footer {
+            background-color: #333;
+            padding: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #444;
+            text-align: center;
+            border-bottom: 2px solid #666;
+        }
+        nav ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        nav ul li a:hover {
+            background-color: #666;
+        }
+        section {
+            padding: 20px;
+        }
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            background-color: #555;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #666;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #888;
+        }
+        #profileMessage {
+            color: #0f0;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>FRIENDLY FIRE</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="live-chat.html">Live Chat</a></li>
+                <li><a href="game-sessions.html">Game Sessions</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Customize Profile</h2>
+        <form id="profileForm">
+            <input type="text" id="userName" placeholder="Your Name" required>
+            <input type="email" id="userEmail" placeholder="Your Gmail" required>
+            <button type="submit">Save Profile</button>
+        </form>
+        <div id="profileMessage"></div>
+    </section>
+
+    <footer>
+        <p>Website created by Zodin</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedName = localStorage.getItem('userName');
+            const savedEmail = localStorage.getItem('userEmail');
+
+            if (savedName) {
+                document.getElementById('userName').value = savedName;
+            }
+
+            if (savedEmail) {
+                document.getElementById('userEmail').value = savedEmail;
+            }
+
+            document.getElementById('profileForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const userName = document.getElementById('userName').value;
+                const userEmail = document.getElementById('userEmail').value;
+
+                if (userName && userEmail) {
+                    localStorage.setItem('userName', userName);
+                    localStorage.setItem('userEmail', userEmail);
+
+                    document.getElementById('profileMessage').textContent = 'Profile saved successfully!';
+                    document.getElementById('profileMessage').style.color = '#0f0';
+                } else {
+                    document.getElementById('profileMessage').textContent = 'Please fill in all fields!';
+                    document.getElementById('profileMessage').style.color = '#f00';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
