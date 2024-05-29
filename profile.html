@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - FRIENDLY FIRE</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header, footer {
+            background-color: #333;
+            padding: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #444;
+            text-align: center;
+            border-bottom: 2px solid #666;
+        }
+        nav ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        nav ul li a:hover {
+            background-color: #666;
+        }
+        section {
+            padding: 20px;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            background-color: #555;
+            color: #fff;
+        }
+        input[type="file"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            background-color: #555;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #666;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #888;
+        }
+        #profileMessage {
+            color: #0f0;
+            margin-top: 10px;
+        }
+        #profilePreview {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #profilePicture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #555;
+            background-size: cover;
+            background-position: center;
+            margin-right: 20px;
+        }
+        #profileInfo {
+            flex: 1;
+        }
+        @media (max-width: 600px) {
+            #profilePreview {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            #profilePicture {
+                margin-bottom: 20px;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>FRIENDLY FIRE</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="live-chat.html">Live Chat</a></li>
+                <li><a href="game-sessions.html">Game Sessions</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Customize Profile</h2>
+        <div id="profilePreview">
+            <div id="profilePicture"></div>
+            <div id="profileInfo">
+                <p id="profileName"></p>
+                <p id="profileEmail"></p>
+            </div>
+        </div>
+        <form id="profileForm">
+            <input type="text" id="userName" placeholder="Your Name" required>
+            <input type="email" id="userEmail" placeholder="Your Gmail" required>
+            <textarea id="userBio" placeholder="Your Bio" rows="4"></textarea>
+            <input type="text" id="userGames" placeholder="Favorite Games">
+            <input type="url" id="userSocial" placeholder="Social Media Link">
+            <input type="file" id="userPicture" accept="image/*">
+            <button type="submit">Save Profile</button>
+        </form>
+        <div id="profileMessage"></div>
+        <button id="logoutButton" style="display: none;">Logout</button>
+    </section>
+
+    <footer>
+        <p>Website created by Zodin</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileForm = document.getElementById('profileForm');
+            const logoutButton = document.getElementById('logoutButton');
+            const profileMessage = document.getElementById('profileMessage');
+
+            const savedName = localStorage.getItem('userName');
+            const savedEmail = localStorage.getItem('userEmail');
+            const savedBio = localStorage.getItem('userBio');
+            const savedGames = localStorage.getItem('userGames');
+            const savedSocial = localStorage.getItem('userSocial');
+            const savedPicture = localStorage.getItem('userPicture');
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            if (isLoggedIn && savedName && savedEmail) {
+                displayProfile(savedName, savedEmail, savedBio, savedGames, savedSocial, savedPicture);
+                toggleProfileForm(false);
+            }
+
+            profileForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const userName = document.getElementById('userName').value;
+                const userEmail = document.getElementById('userEmail').value;
+                const userBio = document.getElementById('userBio').value;
+                const userGames = document.getElementById('userGames').value;
+                const userSocial = document.getElementById('userSocial').value;
+                const userPictureFile = document.getElementById('userPicture').files[0];
+
+                if (userName && userEmail) {
+                    verifyEmail(userEmail).then(isVerified => {
+                        if (isVerified) {
+                            localStorage.setItem('userName', userName);
+                            localStorage.setItem('userEmail', userEmail);
+                            localStorage.setItem('userBio', userBio);
+                            localStorage.setItem('userGames', userGames);
+                            localStorage.setItem('userSocial', userSocial);
+
+                            if (userPictureFile) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const userPictureUrl = e.target.result;
+                                    localStorage.setItem('userPicture', userPictureUrl);
+                                    document.getElementById('profilePicture').style.backgroundImage = `url(${userPictureUrl})`;
+                                };
+                                reader.readAsDataURL(userPictureFile);
+                            }
+
+                            displayProfile(userName, userEmail, userBio, userGames, userSocial, userPictureFile);
+                            localStorage.setItem('isLoggedIn', 'true');
+                            toggleProfileForm(false);
+
+                            profileMessage.textContent = 'Profile saved successfully!';
+                            profileMessage.style.color = '#0f0';
+                        } else {
+                            profileMessage.textContent = 'Email verification failed. Please enter a valid Gmail.';
+                            profileMessage.style.color = '#f00';
+                        }
+                    });
+                } else {
+                    profileMessage.textContent = 'Please fill in all required fields!';
+                    profileMessage.style.color = '#f00';
+                }
+            });
+
+            logoutButton.addEventListener('click', function() {
+                localStorage.setItem('isLoggedIn', 'false');
+                profileForm.reset();
+                document.getElementById('profilePicture').style.backgroundImage = '';
+                document.getElementById('profileName').textContent = '';
+                document.getElementById('profileEmail').textContent = '';
+                toggleProfileForm(true);
+            });
+
+            function verifyEmail(email) {
+                return new Promise(resolve => {
+                    // Simulate email verification process
+                    setTimeout(() => {
+                        resolve(email.endsWith('@gmail.com'));
+                    }, 1000);
+                });
+            }
+
+            function displayProfile(name, email, bio, games, social, picture) {
+                document.getElementById('profileName').textContent = name;
+                document.getElementById('profileEmail').textContent = email;
+                document.getElementById('userBio').value = bio || '';
+                document.getElementById('userGames').value = games || '';
+                document.getElementById('userSocial').value = social || '';
+
+                if (picture) {
+                    document.getElementById('profilePicture').style.backgroundImage = `url(${picture})`;
+                }
+            }
+
+            function toggleProfileForm(showForm) {
+                if (showForm) {
+                    profileForm.style.display = 'block';
+                    logoutButton.style.display = 'none';
+                } else {
+                    profileForm.style.display = 'none';
+                    logoutButton.style.display = 'block';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
