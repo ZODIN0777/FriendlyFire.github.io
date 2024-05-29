@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews - FRIENDLY FIRE</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header, footer {
+            background-color: #333;
+            padding: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #444;
+            text-align: center;
+            border-bottom: 2px solid #666;
+        }
+        nav ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        nav ul li a:hover {
+            background-color: #666;
+        }
+        section {
+            padding: 20px;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            background-color: #555;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #666;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #888;
+        }
+        #reviewBox {
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #333;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #reviewBox .review {
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        #reviewBox .review:last-child {
+            border-bottom: none;
+        }
+        #reviewBox .review h3 {
+            margin: 0;
+        }
+        #reviewBox .review p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>FRIENDLY FIRE</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="live-chat.html">Live Chat</a></li>
+                <li><a href="game-sessions.html">Game Sessions</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Game Reviews</h2>
+        <form id="reviewForm">
+            <input type="text" id="gameName" placeholder="Game Name" required>
+            <textarea id="reviewText" placeholder="Write your review" required></textarea>
+            <button type="submit">Submit Review</button>
+        </form>
+        <div id="reviewBox">
+            <!-- Reviews will appear here -->
+        </div>
+    </section>
+
+    <footer>
+        <p>Website created by Zodin</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedName = localStorage.getItem('userName') || 'Anonymous';
+            const reviewBox = document.getElementById('reviewBox');
+            
+            // Load existing reviews from localStorage
+            const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+            reviews.forEach(review => {
+                displayReview(review.name, review.game, review.text);
+            });
+
+            document.getElementById('reviewForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const gameName = document.getElementById('gameName').value;
+                const reviewText = document.getElementById('reviewText').value;
+
+                const review = {
+                    name: savedName,
+                    game: gameName,
+                    text: reviewText
+                };
+
+                // Save the review to localStorage
+                reviews.push(review);
+                localStorage.setItem('reviews', JSON.stringify(reviews));
+
+                displayReview(review.name, review.game, review.text);
+
+                document.getElementById('reviewForm').reset();
+            });
+
+            function displayReview(name, game, text) {
+                const reviewItem = document.createElement('div');
+                reviewItem.classList.add('review');
+                reviewItem.innerHTML = `
+                    <h3>${game}</h3>
+                    <p><strong>${name}:</strong></p>
+                    <p>${text}</p>
+                `;
+                reviewBox.appendChild(reviewItem);
+                reviewBox.scrollTop = reviewBox.scrollHeight; // Scroll to the bottom
+            }
+        });
+    </script>
+</body>
+</html>
