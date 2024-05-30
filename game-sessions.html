@@ -5,7 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Sessions - FRIENDLY FIRE</title>
     <style>
-        /* Your existing CSS styles */
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header, footer {
+            background-color: #333;
+            padding: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #444;
+            text-align: center;
+            border-bottom: 2px solid #666;
+        }
+        nav ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        nav ul li a:hover {
+            background-color: #666;
+        }
+        section {
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="datetime-local"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            background-color: #555;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #666;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #888;
+        }
+        #sessionsList {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #333;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #sessionsList p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -39,50 +108,20 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sessionForm = document.getElementById('sessionForm');
-            const sessionsList = document.getElementById('sessionsList');
+        document.getElementById('sessionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const sessionTitle = document.getElementById('sessionTitle').value;
+            const sessionGame = document.getElementById('sessionGame').value;
+            const sessionTime = document.getElementById('sessionTime').value;
 
-            // Function to create a session item
-            function createSessionItem(sessionTitle, sessionGame, sessionTime) {
-                const sessionItem = document.createElement('div');
-                sessionItem.innerHTML = `
-                    <p><strong>${sessionTitle}</strong> - ${sessionGame} at ${formatSessionTime(sessionTime)}</p>
-                    <button class="joinButton">Join</button>
-                    <hr>
-                `;
-                return sessionItem;
-            }
+            const sessionItem = document.createElement('div');
+            sessionItem.innerHTML = `<p><strong>${sessionTitle}</strong> - ${sessionGame} at ${sessionTime}</p><hr>`;
+            
+            document.getElementById('sessionsList').appendChild(sessionItem);
 
-            // Function to format session time
-            function formatSessionTime(sessionTime) {
-                const options = { hour: 'numeric', minute: 'numeric', month: 'short', day: 'numeric' };
-                return new Date(sessionTime).toLocaleDateString('en-US', options);
-            }
-
-            // Function to handle form submission
-            sessionForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                
-                const sessionTitle = document.getElementById('sessionTitle').value;
-                const sessionGame = document.getElementById('sessionGame').value;
-                const sessionTime = document.getElementById('sessionTime').value;
-
-                const sessionItem = createSessionItem(sessionTitle, sessionGame, sessionTime);
-                sessionsList.appendChild(sessionItem);
-
-                // Clear form fields
-                sessionForm.reset();
-            });
-
-            // Event delegation for join button
-            sessionsList.addEventListener('click', function(event) {
-                if (event.target.classList.contains('joinButton')) {
-                    const sessionTitle = event.target.parentNode.querySelector('strong').textContent;
-                    // Implement join session logic here
-                    alert(`Joining session: ${sessionTitle}`);
-                }
-            });
+            // Clear form fields
+            document.getElementById('sessionForm').reset();
         });
     </script>
 </body>
