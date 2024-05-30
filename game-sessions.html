@@ -1,93 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Sessions - FRIENDLY FIRE</title>
+    <!-- Meta tags and title -->
     <style>
-        body {
-            background-color: #222;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-        header, footer {
-            background-color: #333;
-            padding: 20px;
-            text-align: center;
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            background-color: #444;
-            text-align: center;
-            border-bottom: 2px solid #666;
-        }
-        nav ul li {
-            display: inline-block;
-            margin-right: 10px;
-        }
-        nav ul li a {
-            display: block;
-            padding: 10px 20px;
-            color: #fff;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-        nav ul li a:hover {
-            background-color: #666;
-        }
-        section {
-            padding: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        input[type="text"],
-        input[type="datetime-local"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: none;
-            background-color: #555;
-            color: #fff;
-        }
-        button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #666;
-            color: #fff;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #888;
-        }
-        #sessionsList {
-            max-height: 300px;
-            overflow-y: auto;
-            background-color: #333;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        #sessionsList p {
-            margin: 5px 0;
-        }
+        /* Your existing CSS styles */
     </style>
 </head>
 <body>
+    <!-- Header with navigation -->
     <header>
-        <h1>FRIENDLY FIRE</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="live-chat.html">Live Chat</a></li>
-                <li><a href="profile.html">Profile</a></li>
-                <li><a href="reviews.html">Reviews</a></li>
-            </ul>
-        </nav>
+        <!-- Header content -->
     </header>
 
     <section>
@@ -96,10 +18,7 @@
             <!-- Game sessions will appear here -->
         </div>
         <form id="sessionForm">
-            <input type="text" id="sessionTitle" placeholder="Session Title" required>
-            <input type="text" id="sessionGame" placeholder="Game Title" required>
-            <input type="datetime-local" id="sessionTime" required>
-            <button type="submit">Create Session</button>
+            <!-- Form fields for creating a session -->
         </form>
     </section>
 
@@ -108,21 +27,63 @@
     </footer>
 
     <script>
-        document.getElementById('sessionForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const sessionTitle = document.getElementById('sessionTitle').value;
-            const sessionGame = document.getElementById('sessionGame').value;
-            const sessionTime = document.getElementById('sessionTime').value;
+        document.addEventListener('DOMContentLoaded', () => {
+            // Function to fetch sessions from the server and update UI
+            function fetchSessions() {
+                fetch('/sessions')
+                    .then(response => response.json())
+                    .then(sessions => {
+                        const sessionsList = document.getElementById('sessionsList');
+                        sessionsList.innerHTML = ''; // Clear existing sessions
+                        sessions.forEach(session => {
+                            const sessionItem = createSessionItem(session);
+                            sessionsList.appendChild(sessionItem);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching sessions:', error));
+            }
 
-            const sessionItem = document.createElement('div');
-            sessionItem.innerHTML = `<p><strong>${sessionTitle}</strong> - ${sessionGame} at ${sessionTime}</p><hr>`;
-            
-            document.getElementById('sessionsList').appendChild(sessionItem);
+            // Function to create a session item
+            function createSessionItem(session) {
+                const sessionItem = document.createElement('div');
+                sessionItem.innerHTML = `
+                    <p><strong>${session.title}</strong> - ${session.game} at ${session.time}</p>
+                    <button class="joinButton">Join</button>
+                    <hr>
+                `;
+                return sessionItem;
+            }
 
-            // Clear form fields
-            document.getElementById('sessionForm').reset();
+            // Fetch sessions when the page loads
+            fetchSessions();
+
+            // Handle form submission to create a new session
+            const sessionForm = document.getElementById('sessionForm');
+            sessionForm.addEventListener('submit', event => {
+                event.preventDefault();
+                const formData = new FormData(sessionForm);
+                fetch('/sessions', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(() => {
+                    fetchSessions(); // Update session list after creating a new session
+                    sessionForm.reset();
+                })
+                .catch(error => console.error('Error creating session:', error));
+            });
+
+            // Event delegation for join button
+            const sessionsList = document.getElementById('sessionsList');
+            sessionsList.addEventListener('click', event => {
+                if (event.target.classList.contains('joinButton')) {
+                    const sessionTitle = event.target.parentNode.querySelector('strong').textContent;
+                    // Implement join session logic here
+                    alert(`Joining session: ${sessionTitle}`);
+                }
+            });
         });
     </script>
 </body>
 </html>
+
