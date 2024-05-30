@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags and title -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Sessions - FRIENDLY FIRE</title>
     <style>
         /* Your existing CSS styles */
     </style>
 </head>
 <body>
-    <!-- Header with navigation -->
     <header>
-        <!-- Header content -->
+        <h1>FRIENDLY FIRE</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="live-chat.html">Live Chat</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+            </ul>
+        </nav>
     </header>
 
     <section>
@@ -18,7 +27,10 @@
             <!-- Game sessions will appear here -->
         </div>
         <form id="sessionForm">
-            <!-- Form fields for creating a session -->
+            <input type="text" id="sessionTitle" placeholder="Session Title" required>
+            <input type="text" id="sessionGame" placeholder="Game Title" required>
+            <input type="datetime-local" id="sessionTime" required>
+            <button type="submit">Create Session</button>
         </form>
     </section>
 
@@ -28,54 +40,43 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Function to fetch sessions from the server and update UI
-            function fetchSessions() {
-                fetch('/sessions')
-                    .then(response => response.json())
-                    .then(sessions => {
-                        const sessionsList = document.getElementById('sessionsList');
-                        sessionsList.innerHTML = ''; // Clear existing sessions
-                        sessions.forEach(session => {
-                            const sessionItem = createSessionItem(session);
-                            sessionsList.appendChild(sessionItem);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching sessions:', error));
-            }
+            const sessionForm = document.getElementById('sessionForm');
+            const sessionsList = document.getElementById('sessionsList');
 
             // Function to create a session item
-            function createSessionItem(session) {
+            function createSessionItem(sessionTitle, sessionGame, sessionTime) {
                 const sessionItem = document.createElement('div');
                 sessionItem.innerHTML = `
-                    <p><strong>${session.title}</strong> - ${session.game} at ${session.time}</p>
+                    <p><strong>${sessionTitle}</strong> - ${sessionGame} at ${formatSessionTime(sessionTime)}</p>
                     <button class="joinButton">Join</button>
                     <hr>
                 `;
                 return sessionItem;
             }
 
-            // Fetch sessions when the page loads
-            fetchSessions();
+            // Function to format session time
+            function formatSessionTime(sessionTime) {
+                const options = { hour: 'numeric', minute: 'numeric', month: 'short', day: 'numeric' };
+                return new Date(sessionTime).toLocaleDateString('en-US', options);
+            }
 
-            // Handle form submission to create a new session
-            const sessionForm = document.getElementById('sessionForm');
-            sessionForm.addEventListener('submit', event => {
+            // Function to handle form submission
+            sessionForm.addEventListener('submit', function(event) {
                 event.preventDefault();
-                const formData = new FormData(sessionForm);
-                fetch('/sessions', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(() => {
-                    fetchSessions(); // Update session list after creating a new session
-                    sessionForm.reset();
-                })
-                .catch(error => console.error('Error creating session:', error));
+                
+                const sessionTitle = document.getElementById('sessionTitle').value;
+                const sessionGame = document.getElementById('sessionGame').value;
+                const sessionTime = document.getElementById('sessionTime').value;
+
+                const sessionItem = createSessionItem(sessionTitle, sessionGame, sessionTime);
+                sessionsList.appendChild(sessionItem);
+
+                // Clear form fields
+                sessionForm.reset();
             });
 
             // Event delegation for join button
-            const sessionsList = document.getElementById('sessionsList');
-            sessionsList.addEventListener('click', event => {
+            sessionsList.addEventListener('click', function(event) {
                 if (event.target.classList.contains('joinButton')) {
                     const sessionTitle = event.target.parentNode.querySelector('strong').textContent;
                     // Implement join session logic here
